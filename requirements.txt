@@ -1,0 +1,10 @@
+streamlit
+fastapi
+uvicorn
+pillow
+torch
+transformers
+pandas
+numpy
+python-multipart
+scikit-learn
