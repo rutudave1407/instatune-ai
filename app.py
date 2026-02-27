@@ -1,69 +1,33 @@
 import streamlit as st
 import requests
-from PIL import Image
 
-st.title("🎵 Bollywood AI Song Recommender")
+st.title("🎬 Bollywood AI - Social Media Suggester")
 
-MAX_FILES = 5
-uploaded_files = st.file_uploader(
-    "Upload up to 5 images",
-    accept_multiple_files=True,
-    type=["jpg", "png", "jpeg"]
-)
+# Inputs
+uploaded_files = st.file_uploader("Upload Images (Max 5)", accept_multiple_files=True, type=['jpg', 'png'])
+if len(uploaded_files) > 5:
+    st.error(f"❌ Limit Exceeded: You uploaded {len(uploaded_files)} images. Please remove {len(uploaded_files) - 5} image(s) to proceed.")
+    st.stop()  # This kills the app execution here so no API call is made
 
-if uploaded_files and len(uploaded_files) <= 5:
-    st.subheader("📷 Selected Images")
+keywords = st.multiselect("Vibe", ["Love", "Birthday", "Party", "Friendship", "Travel","wedding", "sad"])
+context = st.text_input("Additional Prompt Detail (e.g. 'Slow and romantic')")
 
-    cols = st.columns(min(5, len(uploaded_files)))
+# Duration Feature added
+duration = st.radio("Target Video Duration", ["5 sec", "15 sec", "30 sec", "60 sec"], horizontal=True)
 
-    for idx, file in enumerate(uploaded_files):
-        img = Image.open(file)
-        cols[idx].image(img, use_container_width=True)
-
-if uploaded_files and len(uploaded_files) > MAX_FILES:
-    st.error("❌ Maximum 5 images allowed. Please remove extra files.")
-    st.caption(f"📸 {len(uploaded_files)} / 5 images uploaded")
-    st.stop() 
-    
-if uploaded_files:
-    st.caption(f"📸 {len(uploaded_files)} / 5 images uploaded")
-    
-
-keywords = st.text_input("Keywords (optional)")
-prompt = st.text_input("One-line prompt")
-duration = st.selectbox("Duration", [5, 10, 15, 30])
-
-if st.button("Get Song Recommendation"):
-
-    # ✅ Validation: at least 1 image
+if st.button("Get Song"):
     if not uploaded_files:
-        st.error("❌ Please upload at least one image.")
-        st.stop()
-
-    # ✅ Validation: max 5 images
-    if len(uploaded_files) > 5:
-        st.error("❌ You can upload a maximum of 5 images only.")
-        st.stop()
-
-    # Prepare files
-    files = [
-        ("images", (f.name, f.getvalue(), f.type))
-        for f in uploaded_files
-    ]
-
-    try:
-        response = requests.post(
-            "http://localhost:8000/recommend",
-            files=files,
-            data={
-                "keywords": keywords,
-                "prompt": prompt,
-                "duration": duration
-            },
-            timeout=120
-        )
-
-        st.json(response.json())
-
-    except requests.exceptions.ConnectionError:
-        st.error("⚠️ Backend server is not running. Start FastAPI first.")
+        st.warning("Please upload at least one image.")
+    else:
+        # Prepare multipart/form-data
+        files = [("files", (f.name, f.getvalue(), f.type)) for f in uploaded_files]
+        data = {"keywords": ",".join(keywords), "user_context": context, "duration": duration}
+        
+        with st.spinner("Analyzing your images and song timing..."):
+            res = requests.post("http://localhost:8000/suggest-song", data=data, files=files)
+            if res.status_code == 200:
+                song = res.json()
+                st.subheader(f"🎵 {song['song_name']}")
+                st.json(song) # Valid JSON output as requested
+            else:
+                st.error(f"API Error: {res.text}")
