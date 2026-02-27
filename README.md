@@ -26,7 +26,6 @@ InstaTune AI/
 │
 ├── app.py               # Streamlit frontend
 ├── api.py               # FastAPI backend
-├── recommender.py       # Song recommendation engine
 ├── requirements.txt     # Dependencies
 └── README.md
 ```
