@@ -2,7 +2,7 @@
 
 AI-powered web app that recommends the most suitable **Bollywood songs** based on uploaded images, keywords, and user mood.
 
-Built with **FastAPI + Streamlit + Machine Learning**, InstaTune AI analyzes visual emotion and context to generate smart music recommendations for Instagram posts and stories.
+Built with **FastAPI + Streamlit + Google Gemini 3 Flash (Multimodal)**, InstaTune AI analyzes visual emotion and context to generate smart music recommendations for Instagram posts and stories.
 
 ---
 
@@ -28,7 +28,6 @@ InstaTune AI/
 ├── api.py               # FastAPI backend
 ├── emotion_model.py     # Emotion detection logic
 ├── recommender.py       # Song recommendation engine
-├── songs_dataset.csv    # Song database
 ├── requirements.txt     # Dependencies
 └── README.md
 ```
@@ -40,9 +39,8 @@ InstaTune AI/
 * **Python 3.10+**
 * **FastAPI**
 * **Streamlit**
-* **Pandas / NumPy**
 * **Uvicorn**
-* **Machine Learning (Emotion Analysis)**
+* **Google Gemini 3 Flash (Multimodal)**
 
 ---
 
