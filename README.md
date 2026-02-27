@@ -26,7 +26,6 @@ InstaTune AI/
 │
 ├── app.py               # Streamlit frontend
 ├── api.py               # FastAPI backend
-├── emotion_model.py     # Emotion detection logic
 ├── recommender.py       # Song recommendation engine
 ├── requirements.txt     # Dependencies
 └── README.md
