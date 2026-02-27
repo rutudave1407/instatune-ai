@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-st.title("🎬 InstaTune AI - get your perfect song for your video")
+st.title("🎬 InstaTune AI - get your perfect song")
 
 # Inputs
 uploaded_files = st.file_uploader("Upload Images (Max 5)", accept_multiple_files=True, type=['jpg', 'png'])
